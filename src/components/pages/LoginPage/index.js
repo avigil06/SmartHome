@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Redirect } from 'react-router-dom'
 
-import { IconButton, Field, Button, Form } from 'components'
+import { IconButton, Field, Button, Form, Heading } from 'components'
 
 import { auth } from 'services/auth'
 
@@ -16,18 +16,25 @@ const Wrapper = styled.div`
   width: 100vw;
 `
 
-const FormContainer = styled(Form)`
-  display: flex;
-  flex-direction: column;
-  width: 400px;
-  max-width: 400px;
+const FormContainer = styled.div`
+  width: 100%;
+  max-width: 320px;
+  padding: 1rem;
+  border: 2px solid transparent;
+  border-color: #2196f3;
+  border-radius: 3px;
+
+`
+
+const H = styled(Heading)`
+  color: #2196f3;
 `
 
 class LoginPage extends Component {
 
   state = {
-    email: 'avigil06@gmail.com',
-    password: 'Tester123',
+    email: '',
+    password: '',
     redirectToReferrer: false,
     submitting: false,
   }
@@ -49,7 +56,7 @@ class LoginPage extends Component {
       redirectToReferrer,
       submitting
     } = this.state
-    const { from } = this.props.location.state
+    const { from } = this.props.location.state || '/home'
 
     const userField = {
       name: "email",
@@ -72,13 +79,16 @@ class LoginPage extends Component {
 
     return (
       <Wrapper>
-        {redirectToReferrer && <Redirect to={from || '/home'} />}
-        <FormContainer
-          handleSubmit={this.handleSubmit}
-          submitting={submitting}
-          submitText="Login">
-          <Field {...userField} />
-          <Field {...passwordField} />
+        {redirectToReferrer && <Redirect to={from} />}
+        <FormContainer>
+          <H align="center">SmartHome</H>
+          <Form
+            handleSubmit={this.handleSubmit}
+            submitting={submitting}
+            submitText="Login">
+            <Field {...userField} />
+            <Field {...passwordField} />
+          </Form>
         </FormContainer>
       </Wrapper>
     )
