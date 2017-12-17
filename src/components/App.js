@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Switch, Route, Match, Redirect } from 'react-router-dom'
 import { injectGlobal, ThemeProvider } from 'styled-components'
 
-import { HomePage, SamplePage, NotFoundPage } from 'components'
+import { HomePage, SamplePage, NotFoundPage, LoginPage } from 'components'
 import { GoogleTagManager } from 'containers'
 
 import { auth, storageKey, isAuthenticated } from '../services/auth'
@@ -54,6 +54,7 @@ class App extends Component {
         <ThemeProvider theme={theme}>
           <Switch>
             <Route path="/" component={HomePage} exact />
+            <Route path="/login" component={LoginPage} exact />
             <MatchWhenAuthorized path="/sample-page" component={SamplePage} />
             <Route component={NotFoundPage} />
           </Switch>

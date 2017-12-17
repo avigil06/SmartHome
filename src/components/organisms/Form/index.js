@@ -5,22 +5,16 @@ import styled from 'styled-components'
 
 import { ReduxField, Heading, Button } from 'components'
 
-const F = styled.form`
-  width: 100%;
-  box-sizing: border-box;
-  padding-bottom: 1rem;
-`
-
 const B = styled(Button)`
   width: 100%;
 `
 
 const Form = ({ handleSubmit, submitting, submitText, children }) => {
   return (
-    <F onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       {children}
       <B type="submit" disabled={submitting}>{ submitText }</B>
-    </F>
+    </form>
   )
 }
 
