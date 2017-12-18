@@ -37,7 +37,6 @@ class App extends Component {
 
   componentDidMount() {
     auth.onAuthStateChanged(user => {
-      console.log(user)
       if (user) {
         window.localStorage.setItem(storageKey, user.uid)
         this.setState({uid: user.uid})
@@ -54,9 +53,8 @@ class App extends Component {
         <GoogleTagManager />
         <ThemeProvider theme={theme}>
           <Switch>
-            <Route path="/" component={HomePage} exact />
+            <MatchWhenAuthorized path="/" component={HomePage} exact />
             <Route path="/login" component={LoginPage} exact />
-            <MatchWhenAuthorized path="/sample-page" component={SamplePage} />
             <Route component={NotFoundPage} />
           </Switch>
         </ThemeProvider>
