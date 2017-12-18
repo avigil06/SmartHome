@@ -21,13 +21,21 @@ const FormContainer = styled.div`
   max-width: 320px;
   padding: 1rem;
   border: 2px solid transparent;
-  border-color: #2196f3;
+  border-color: ${props => props.error ? 'red' : '#2196f3'};
   border-radius: 3px;
-
+  transition: border-color 300ms ease-in-out;
 `
 
 const H = styled(Heading)`
-  color: #2196f3;
+  color: ${props => props.error ? 'red' : '#2196f3'};
+  transition: color 300ms ease-in-out;
+`
+
+const ErrorMessage = styled.h4`
+  color: red;
+  text-align: center;
+  background-color: white;
+  display: block;
 `
 
 class LoginPage extends Component {
@@ -37,6 +45,7 @@ class LoginPage extends Component {
     password: '',
     redirectToReferrer: false,
     submitting: false,
+    error: null
   }
 
   handleSubmit = (event) => {
@@ -44,8 +53,13 @@ class LoginPage extends Component {
     event.preventDefault()
     this.setState({submitting: true})
     auth.signInWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(response => {
+        console.log(response)
         this.setState({redirectToReferrer: true})
+      })
+      .catch(error => {
+        console.log(error)
+        this.setState({submitting: false, error})
       })
   }
 
@@ -54,7 +68,8 @@ class LoginPage extends Component {
       email,
       password,
       redirectToReferrer,
-      submitting
+      submitting,
+      error
     } = this.state
     const { from } = this.props.location.state || '/home'
 
@@ -77,11 +92,14 @@ class LoginPage extends Component {
       }
     }
 
+    const Error = <ErrorMessage>{error}</ErrorMessage>
+
     return (
       <Wrapper>
         {redirectToReferrer && <Redirect to={from} />}
-        <FormContainer>
-          <H align="center">SmartHome</H>
+        <FormContainer error={error}>
+          <H error={error} align="center">SmartHome</H>
+          {error && <ErrorMessage>{error.message}</ErrorMessage>}
           <Form
             handleSubmit={this.handleSubmit}
             submitting={submitting}
