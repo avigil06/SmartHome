@@ -4,7 +4,7 @@ import { AdminTemplate } from 'components'
 
 const AdminPage = () => {
   return (
-    <AdminTemplate>
+    <AdminTemplate title="Admin">
       <div>Generic Page</div>
     </AdminTemplate>
   )
