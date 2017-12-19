@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { palette } from 'styled-theme'
 
-import { Heading, Menu } from 'components'
+import { Heading, Menu, Link } from 'components'
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,10 +22,10 @@ const Content = styled.section`
 
 const TitleBar = styled.section`
   height: 36px;
-  border-bottom: 1px solid #9b9b8d;
+  border-bottom: 1px solid ${props => palette('grayscale', 1)};
   padding: 0 24px;
   > * {
-    color: #9b9b8d;
+    color: ${props => palette('grayscale', 1)};
   }
 `
 
@@ -36,9 +37,8 @@ const AdminTemplate = ({ children, title, ...props }) => {
       <Menu
         outerContainerId={outerContainerId}
         pageWrapId={pageWrapId}>
-        <a>Home</a>
-        <a>Lights</a>
-        <a>Calendar</a>
+        <Link to="/">Home</Link>
+        <Link to="/lights">Lights</Link>
       </Menu>
       <Content id={pageWrapId}>
         <TitleBar>

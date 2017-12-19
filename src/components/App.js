@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Switch, Route, Match, Redirect } from 'react-router-dom'
 import { injectGlobal, ThemeProvider } from 'styled-components'
 
-import { AdminPage, SamplePage, NotFoundPage, LoginPage } from 'components'
+import { AdminPage, LightsPage, NotFoundPage, LoginPage } from 'components'
 import { GoogleTagManager } from 'containers'
 
 import { auth, storageKey, isAuthenticated } from '../services/auth'
@@ -54,6 +54,7 @@ class App extends Component {
         <ThemeProvider theme={theme}>
           <Switch>
             <MatchWhenAuthorized path="/" component={AdminPage} exact />
+            <MatchWhenAuthorized path="/lights" component={LightsPage} exact />
             <Route path="/login" component={LoginPage} exact />
             <Route component={NotFoundPage} />
           </Switch>

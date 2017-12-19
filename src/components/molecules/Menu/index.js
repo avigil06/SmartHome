@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { font, palette } from 'styled-theme'
+import { font, palette, key } from 'styled-theme'
 
 import { pushRotate as M } from 'react-burger-menu'
 
@@ -19,25 +19,25 @@ const menuProps = {
       top: '24px'
     },
     bmBurgerBars: {
-      background: '#373a47'
+      background: `#414141`
     },
     bmCrossButton: {
       height: '24px',
       width: '24px'
     },
     bmCross: {
-      background: '#bdc3c7'
+      background: '#bdbdbd'
     },
     bmMenu: {
-      background: '#373a47',
+      background: '#414141',
       padding: '2.5em 1.5em 0',
       fontSize: '1.15em'
     },
     bmMorphShape: {
-      fill: '#373a47'
+      fill: '#414141'
     },
     bmItemList: {
-      color: '#b8b7ad',
+      color: '#bdbdbd',
       padding: '0.8em'
     },
     bmOverlay: {
@@ -47,8 +47,14 @@ const menuProps = {
 }
 
 const Menu = ({children, ...props }) => {
+  const color = key(['colors', 'grayscale'])
+  console.log(color)
   return (
-    <M {...menuProps} {...props}>{children}</M>
+    <M
+      {...menuProps}
+      {...props}>
+      {children}
+    </M>
   )
 }
 
