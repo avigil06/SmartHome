@@ -2,8 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import { pushRotate as Menu } from 'react-burger-menu'
-import { Heading } from 'components'
+import { Heading, Menu } from 'components'
 
 const Wrapper = styled.div`
   display: flex;
@@ -30,55 +29,18 @@ const TitleBar = styled.section`
 `
 
 const AdminTemplate = ({ children, title, ...props }) => {
-  const menuProps = {
-    pageWrapId: 'page-wrap',
-    outerContainerId: 'outer-container',
-    width: '280px',
-    left: true,
-    styles: {
-      bmBurgerButton: {
-        position: 'absolute',
-        width: '24px',
-        height: '22px',
-        left: '24px',
-        top: '24px'
-      },
-      bmBurgerBars: {
-        background: '#373a47'
-      },
-      bmCrossButton: {
-        height: '24px',
-        width: '24px'
-      },
-      bmCross: {
-        background: '#bdc3c7'
-      },
-      bmMenu: {
-        background: '#373a47',
-        padding: '2.5em 1.5em 0',
-        fontSize: '1.15em'
-      },
-      bmMorphShape: {
-        fill: '#373a47'
-      },
-      bmItemList: {
-        color: '#b8b7ad',
-        padding: '0.8em'
-      },
-      bmOverlay: {
-        background: 'rgba(0, 0, 0, 0.3)'
-      }
-    }
-  }
-
+  const pageWrapId = 'page-wrap'
+  const outerContainerId = 'outer-container'
   return (
-    <Wrapper {...props} id="outer-container">
-      <Menu {...menuProps}>
+    <Wrapper {...props} id={outerContainerId}>
+      <Menu
+        outerContainerId={outerContainerId}
+        pageWrapId={pageWrapId}>
         <a>Home</a>
         <a>Lights</a>
         <a>Calendar</a>
       </Menu>
-      <Content id="page-wrap">
+      <Content id={pageWrapId}>
         <TitleBar>
           <Heading>{title}</Heading>
         </TitleBar>

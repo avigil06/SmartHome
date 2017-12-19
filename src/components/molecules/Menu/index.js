@@ -3,40 +3,57 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { font, palette } from 'styled-theme'
 
-const StyledBlockquote = styled.blockquote`
-  position: relative;
-  font-family: ${font('quote')};
-  font-style: italic;
-  font-size: 1.2rem;
-  line-height: 2rem;
-  box-sizing: border-box;
-  color: ${palette('grayscale', 1)};
-  border-left: 5px solid ${palette('grayscale', 2, true)};
-  margin: 1rem 0;
-  padding: 0.5rem 0 0.5rem 1.5rem;
-`
+import { pushRotate as M } from 'react-burger-menu'
 
-const Cite = styled.cite`
-  display: block;
-  font-family: ${font('primary')};
-  font-weight: 300;
-  font-style: normal;
-  margin-top: 0.4rem;
-`
+const menuProps = {
+  pageWrapId: 'page-wrap',
+  outerContainerId: 'outer-container',
+  width: '280px',
+  left: true,
+  styles: {
+    bmBurgerButton: {
+      position: 'absolute',
+      width: '24px',
+      height: '22px',
+      left: '24px',
+      top: '24px'
+    },
+    bmBurgerBars: {
+      background: '#373a47'
+    },
+    bmCrossButton: {
+      height: '24px',
+      width: '24px'
+    },
+    bmCross: {
+      background: '#bdc3c7'
+    },
+    bmMenu: {
+      background: '#373a47',
+      padding: '2.5em 1.5em 0',
+      fontSize: '1.15em'
+    },
+    bmMorphShape: {
+      fill: '#373a47'
+    },
+    bmItemList: {
+      color: '#b8b7ad',
+      padding: '0.8em'
+    },
+    bmOverlay: {
+      background: 'rgba(0, 0, 0, 0.3)'
+    }
+  }
+}
 
-const Menu = ({ cite, children, ...props }) => {
+const Menu = ({children, ...props }) => {
   return (
-    <StyledBlockquote {...props}>
-      <div>{children}</div>
-      {cite && <Cite>{cite}</Cite>}
-    </StyledBlockquote>
+    <M {...menuProps} {...props}>{children}</M>
   )
 }
 
 Menu.propTypes = {
-  cite: PropTypes.string,
   children: PropTypes.node,
-  reverse: PropTypes.bool,
 }
 
 export default Menu
