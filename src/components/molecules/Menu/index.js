@@ -47,8 +47,6 @@ const menuProps = {
 }
 
 const Menu = ({children, ...props }) => {
-  const color = key(['colors', 'grayscale'])
-  console.log(color)
   return (
     <M
       {...menuProps}

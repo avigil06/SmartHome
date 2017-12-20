@@ -45,10 +45,7 @@ class LoginModal extends Component {
 
     const fields = Array.from(event.target.querySelectorAll('input, select'))
       .map(field => ({ name: field.name, value: field.value }))
-
-    console.log(fields.map(field => field.value))
-
-
+      
     setTimeout(() => { this.setState({submitting: false}) }, 5000)
   }
 
