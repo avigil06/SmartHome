@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { palette, font } from 'styled-theme'
+import { Redirect } from 'react-router-dom'
 
-import { AdminTemplate, Group, GroupHeading, GroupEntry } from 'components'
+import { AdminTemplate, Group, GroupHeading, GroupEntry, BridgeModal } from 'components'
 
 const PaneContainer = styled.section`
   display: flex;
@@ -22,10 +23,12 @@ const LeftPane = styled.div`
 const RightPane = styled.div`
   flex-grow: 1;
 `
+
 class LightsPage extends Component {
 
   state = {
     activeEntry: null,
+    hasBridge: false,
     entries: { lights: [], groups: [] },
   }
 
@@ -64,8 +67,16 @@ class LightsPage extends Component {
   render() {
     const {activeEntry, ...state} = this.state
 
+    const modal = {
+      isOpen: !state.hasBridge,
+      onClose() {
+        console.log('closing modal')
+      }
+    }
+
     return (
       <AdminTemplate title="Lights">
+        <BridgeModal {...modal} />
         <PaneContainer>
           <LeftPane>
             <Group>
@@ -76,7 +87,7 @@ class LightsPage extends Component {
             </Group>
           </LeftPane>
           <RightPane>
-            { activeEntry
+            { activeEntry && state.hasBridge
               ? state.entries[activeEntry.path][activeEntry.index]
               : 'No Entry Selected' }
             <ul>

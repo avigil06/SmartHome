@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom'
 
 import { IconButton, Field, Button, Form, Heading } from 'components'
 
-import { auth } from 'services/auth'
+import { auth } from 'services/firebase'
 
 const Wrapper = styled.div`
   display: flex;
@@ -43,22 +43,21 @@ class LoginPage extends Component {
   state = {
     email: '',
     password: '',
+    last_octet: '',
     redirectToReferrer: false,
     submitting: false,
     error: null
   }
 
   handleSubmit = (event) => {
-    const { email, password } = this.state
+    const { email, password, last_octet } = this.state
     event.preventDefault()
     this.setState({submitting: true})
     auth.signInWithEmailAndPassword(email, password)
       .then(response => {
-        console.log(response)
         this.setState({redirectToReferrer: true})
       })
       .catch(error => {
-        console.log(error)
         this.setState({submitting: false, error})
       })
   }
@@ -67,6 +66,7 @@ class LoginPage extends Component {
     const {
       email,
       password,
+      last_octet,
       redirectToReferrer,
       submitting,
       error
