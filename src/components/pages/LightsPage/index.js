@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import { palette, font } from 'styled-theme'
 
-import { AdminTemplate } from 'components'
+import { AdminTemplate, Group, GroupHeading, GroupEntry } from 'components'
 
 const PaneContainer = styled.section`
   display: flex;
@@ -22,31 +22,6 @@ const LeftPane = styled.div`
 const RightPane = styled.div`
   flex-grow: 1;
 `
-// ----- Start Group Stuff
-const Group = styled.ul`
-  width: 100%;
-  background-color: ${props => palette('grayscale', 3)};
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  font-family: ${props => font('pre')};
-`
-
-const GroupHeading = styled.li`
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-bottom: 2px solid ${props => palette('white', 0)};
-  padding: .5rem 5px;
-`
-
-const GroupEntry = styled.li`
-  font-size: 1rem;
-  border-bottom: 1px solid ${props => palette('white', 0)};
-  padding: .5rem 5px;
-  cursor: pointer;
-`
-
-// ----- End Group Stuff
 class LightsPage extends Component {
 
   state = {
@@ -104,6 +79,13 @@ class LightsPage extends Component {
             { activeEntry
               ? state.entries[activeEntry.path][activeEntry.index]
               : 'No Entry Selected' }
+            <ul>
+              <li>On/Off</li>
+              <li>Color</li>
+              <li>Brightness</li>
+              <li>Timers</li>
+              <li>Groups</li>
+            </ul>
           </RightPane>
         </PaneContainer>
       </AdminTemplate>
