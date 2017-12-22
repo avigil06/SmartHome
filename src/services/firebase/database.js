@@ -26,7 +26,7 @@ export const getUsersHueBridge = () => new Promise(async (resolve, reject) => {
   if (ip_address) {
     return db.ref(`/bridges/${convertIPtoDBPath(ip_address)}/`)
       .once('value')
-      .then(snapshot => resolve(snapshot.val()))
+      .then(snapshot => resolve({ username: snapshot.val(), ip_address }))
       .catch(() => reject(null))
   }
 

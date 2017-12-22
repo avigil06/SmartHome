@@ -4,8 +4,16 @@ import { palette, font } from 'styled-theme'
 import { Redirect } from 'react-router-dom'
 
 import { getUsersHueBridge } from 'services/firebase/database'
+import { getAllLights, getAllGroups } from 'services/bridges/hue'
 
-import { AdminTemplate, Group, GroupHeading, GroupEntry, BridgeModal } from 'components'
+import {
+  AdminTemplate,
+  Heading,
+  Group,
+  GroupHeading,
+  GroupEntry,
+  BridgeModal,
+  Button } from 'components'
 
 const PaneContainer = styled.section`
   display: flex;
@@ -30,53 +38,48 @@ class LightsPage extends Component {
 
   state = {
     activeEntry: null,
-    hasBridge: false,
+    hasBridge: true,
+    bridge: null,
     entries: { lights: [], groups: [] },
   }
 
   componentWillMount() {
     const philipsUsername = getUsersHueBridge()
-      .then(bridge => {
-        if (bridge) {
-          this.setState({hasBridge: true})
+      .then(response => {
+        if (response) {
+          this.setState({ hasBridge: true, bridge: response })
+          this.getLights(response)
         }
       })
       .catch(error => {
         console.log(error)
+        this.setState({ hasBridge: false })
       })
-    this.setState({
-      entries: {
-        lights: [
-          'Kitchen 1A',
-          'Kitchen 1B',
-          'Kitchen 2A',
-          'Kitchen 2B',
-          'Living Room',
-          'Rylee Lamp',
-          'Outside 1',
-          'Outside 2'
-        ],
-        groups: [
-          'Kitchen 1',
-          'Kitchen 2',
-          'Living Room',
-          'Rylee Room',
-          'Outside'
-        ]
-      },
-      activeEntry: { path: 'lights', index: 0 }
-    });
   }
+
+  getLights = (bridge) => Promise.all([
+      getAllLights(bridge.ip_address, bridge.username),
+      getAllGroups(bridge.ip_address, bridge.username)
+    ])
+    .then(responses => {
+      const entries = {
+        lights: responses[0],
+        groups: responses[1]
+      }
+      this.setState({entries})
+    })
 
   setActiveEntry = (path, index) => this.setState({ activeEntry: { path, index } });
 
   renderPath = (path) => this.state.entries[path].map(
     (entry, i) => <GroupEntry
                       onClick={() => this.setActiveEntry(path, i)}
-                      key={`${path}.${i}`}>{ entry }</GroupEntry>)
+                      key={`${path}.${i}`}>{ entry.name }</GroupEntry>)
 
   render() {
-    const {activeEntry, ...state} = this.state
+    const {...state} = this.state
+    const activeEntry = state.entries && state.activeEntry
+      ? state.entries[state.activeEntry.path][state.activeEntry.index] : null
 
     const modal = {
       isOpen: !state.hasBridge,
@@ -97,18 +100,16 @@ class LightsPage extends Component {
               { this.renderPath('groups') }
             </Group>
           </LeftPane>
-          <RightPane>
-            { activeEntry && state.hasBridge
-              ? state.entries[activeEntry.path][activeEntry.index]
-              : 'No Entry Selected' }
-            <ul>
-              <li>On/Off</li>
-              <li>Color</li>
-              <li>Brightness</li>
-              <li>Timers</li>
-              <li>Groups</li>
-            </ul>
-          </RightPane>
+          { activeEntry && state.hasBridge
+            ? <RightPane>
+                <Heading>{ activeEntry.name } <Button onClick={() => this.getLights(state.bridge)}>Refresh</Button></Heading>
+                <ul>
+                  <li>Status: { activeEntry.state.on ? 'On' : 'Off' }</li>
+                  <li>Brightness: { Math.ceil(activeEntry.state.bri / 254 * 100) }%</li>
+                </ul>
+              </RightPane>
+            : <RightPane><Heading>No Entry Selected</Heading></RightPane>
+          }
         </PaneContainer>
       </AdminTemplate>
     )
