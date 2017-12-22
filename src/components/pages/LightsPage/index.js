@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { palette, font } from 'styled-theme'
 import { Redirect } from 'react-router-dom'
 
+import { getUsersHueBridge } from 'services/firebase/database'
+
 import { AdminTemplate, Group, GroupHeading, GroupEntry, BridgeModal } from 'components'
 
 const PaneContainer = styled.section`
@@ -33,6 +35,15 @@ class LightsPage extends Component {
   }
 
   componentWillMount() {
+    const philipsUsername = getUsersHueBridge()
+      .then(bridge => {
+        if (bridge) {
+          this.setState({hasBridge: true})
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
     this.setState({
       entries: {
         lights: [
