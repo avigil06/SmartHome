@@ -33,3 +33,21 @@ export const getAllLights = (ip_address, username) => axios
       console.log(error)
       throw error
     })
+
+export const toggleLightOnOff = (ip_address, username, lightId, nextState) => axios
+  .put(`http://${ip_address}/api/${username}/lights/${lightId}/state`, { on: nextState})
+  .then(response => response.data)
+
+export function setupHueQueryBridge (ip_address, username) {
+  this.ip_address = ip_address
+  this.username = username
+  this.timer = null
+
+  this.getAllLights = () => getAllLights(this.ip_address, this.username)
+  this.getAllGroups = () => getAllGroups(this.ip_address, this.username)
+  this.toggleLightOnOff = (lightId, nextState) => toggleLightOnOff(this.ip_address, this.username, lightId, nextState)
+  this.getAll = () => Promise.all([
+    this.getAllLights(),
+    this.getAllGroups()
+  ])
+}

@@ -4,7 +4,7 @@ import { palette, font } from 'styled-theme'
 import { Redirect } from 'react-router-dom'
 
 import { getUsersHueBridge } from 'services/firebase/database'
-import { getAllLights, getAllGroups } from 'services/bridges/hue'
+import { setupHueQueryBridge } from 'services/bridges/hue'
 
 import {
   AdminTemplate,
@@ -47,8 +47,16 @@ class LightsPage extends Component {
     const philipsUsername = getUsersHueBridge()
       .then(response => {
         if (response) {
-          this.setState({ hasBridge: true, bridge: response })
-          this.getLights(response)
+          const bridge = new setupHueQueryBridge(response.ip_address, response.username)
+          this.setState({ hasBridge: true, bridge })
+          bridge.getAll()
+          .then(responses => {
+            const entries = {
+              lights: responses[0],
+              groups: responses[1]
+            }
+            this.setState({entries})
+          })
         }
       })
       .catch(error => {
@@ -57,10 +65,8 @@ class LightsPage extends Component {
       })
   }
 
-  getLights = (bridge) => Promise.all([
-      getAllLights(bridge.ip_address, bridge.username),
-      getAllGroups(bridge.ip_address, bridge.username)
-    ])
+  triggerRefresh = () => {
+    this.state.bridge.getAll()
     .then(responses => {
       const entries = {
         lights: responses[0],
@@ -68,6 +74,13 @@ class LightsPage extends Component {
       }
       this.setState({entries})
     })
+  }
+
+  toggleLight = (id, nextState) => {
+    const { bridge } = this.state
+    bridge.toggleLightOnOff(id, nextState)
+    .then(() => this.triggerRefresh())
+  }
 
   setActiveEntry = (path, index) => this.setState({ activeEntry: { path, index } });
 
@@ -102,9 +115,9 @@ class LightsPage extends Component {
           </LeftPane>
           { activeEntry && state.hasBridge
             ? <RightPane>
-                <Heading>{ activeEntry.name } <Button onClick={() => this.getLights(state.bridge)}>Refresh</Button></Heading>
+                <Heading>{ activeEntry.name } <Button onClick={this.triggerRefresh}>Refresh</Button></Heading>
                 <ul>
-                  <li>Status: { activeEntry.state.on ? 'On' : 'Off' }</li>
+                  <li>Status: <Button onClick={() => this.toggleLight(activeEntry.id, !activeEntry.state.on)}>{ activeEntry.state.on ? 'On' : 'Off' }</Button></li>
                   <li>Brightness: { Math.ceil(activeEntry.state.bri / 254 * 100) }%</li>
                 </ul>
               </RightPane>
