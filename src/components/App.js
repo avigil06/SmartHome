@@ -5,7 +5,7 @@ import { injectGlobal, ThemeProvider } from 'styled-components'
 import { AdminPage, LightsPage, NotFoundPage, LoginPage } from 'components'
 import { GoogleTagManager } from 'containers'
 
-import { auth, storageKey, isAuthenticated } from '../services/auth'
+import { auth, storageKey, isAuthenticated } from '../services/firebase'
 
 // https://github.com/diegohaz/arc/wiki/Styling
 import theme from './themes/default'
