@@ -3,8 +3,7 @@ import styled from 'styled-components'
 import { palette, font } from 'styled-theme'
 import { Redirect } from 'react-router-dom'
 
-import { getUsersHueBridge } from 'services/firebase/database'
-import { setupHueQueryBridge } from 'services/bridges/hue'
+import { HueBridge } from 'services/firebase/utilities/hue'
 
 import {
   AdminTemplate,
@@ -14,6 +13,8 @@ import {
   GroupEntry,
   BridgeModal,
   Button } from 'components'
+
+import { AdminContainer } from 'containers'
 
 const PaneContainer = styled.section`
   display: flex;
@@ -43,45 +44,6 @@ class LightsPage extends Component {
     entries: { lights: [], groups: [] },
   }
 
-  componentWillMount() {
-    const philipsUsername = getUsersHueBridge()
-      .then(response => {
-        if (response) {
-          const bridge = new setupHueQueryBridge(response.ip_address, response.username)
-          this.setState({ hasBridge: true, bridge })
-          bridge.getAll()
-          .then(responses => {
-            const entries = {
-              lights: responses[0],
-              groups: responses[1]
-            }
-            this.setState({entries})
-          })
-        }
-      })
-      .catch(error => {
-        console.log(error)
-        this.setState({ hasBridge: false })
-      })
-  }
-
-  triggerRefresh = () => {
-    this.state.bridge.getAll()
-    .then(responses => {
-      const entries = {
-        lights: responses[0],
-        groups: responses[1]
-      }
-      this.setState({entries})
-    })
-  }
-
-  toggleLight = (id, nextState) => {
-    const { bridge } = this.state
-    bridge.toggleLightOnOff(id, nextState)
-    .then(() => this.triggerRefresh())
-  }
-
   setActiveEntry = (path, index) => this.setState({ activeEntry: { path, index } });
 
   renderPath = (path) => this.state.entries[path].map(
@@ -102,8 +64,7 @@ class LightsPage extends Component {
     }
 
     return (
-      <AdminTemplate title="Lights">
-        <BridgeModal {...modal} />
+      <AdminContainer title="Lights">
         <PaneContainer>
           <LeftPane>
             <Group>
@@ -115,16 +76,16 @@ class LightsPage extends Component {
           </LeftPane>
           { activeEntry && state.hasBridge
             ? <RightPane>
-                <Heading>{ activeEntry.name } <Button onClick={this.triggerRefresh}>Refresh</Button></Heading>
+                <Heading>{ activeEntry.name }</Heading>
                 <ul>
-                  <li>Status: <Button onClick={() => this.toggleLight(activeEntry.id, !activeEntry.state.on)}>{ activeEntry.state.on ? 'On' : 'Off' }</Button></li>
+                  <li>Status: <Button>{ activeEntry.state.on ? 'On' : 'Off' }</Button></li>
                   <li>Brightness: { Math.ceil(activeEntry.state.bri / 254 * 100) }%</li>
                 </ul>
               </RightPane>
             : <RightPane><Heading>No Entry Selected</Heading></RightPane>
           }
         </PaneContainer>
-      </AdminTemplate>
+      </AdminContainer>
     )
   }
 }

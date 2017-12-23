@@ -2,6 +2,8 @@ import { firebaseApp, auth } from './'
 
 const db = firebaseApp.database()
 
+export const database = db
+
 export const addHueBridge = async (ip_address, username) => {
   const appName = 'SmartHome/Web'
   const userId = auth.currentUser.uid
