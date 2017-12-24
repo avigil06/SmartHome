@@ -1,5 +1,7 @@
 const firebase = require('firebase')
 
+const authConfig  = require('../config')
+
 let config = {
   apiKey: "AIzaSyAVl9S4OIigOzDXIdUt2Aikv6a3HWYGBdU",
   authDomain: "smarthome-99b37.firebaseapp.com",
@@ -7,11 +9,6 @@ let config = {
   projectId: "smarthome-99b37",
   storageBucket: "smarthome-99b37.appspot.com",
   messagingSenderId: "1048680457573"
-}
-
-const authConfig = {
-  email: 'avigil06+rpi@gmail.com',
-  password: 'km2!z43kaNwqOgc2'
 }
 
 const app = firebase.initializeApp(config)
