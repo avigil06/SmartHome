@@ -71,7 +71,8 @@ class LoginPage extends Component {
       submitting,
       error
     } = this.state
-    const { from } = this.props.location.state || '/home'
+    const { authenticated } = this.props
+    const { from } = this.props.location.state || '/'
 
     const userField = {
       name: "email",

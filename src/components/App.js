@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { Switch, Route, Match, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
 import { injectGlobal, ThemeProvider } from 'styled-components'
 
 import { AdminPage, LightsPage, NotFoundPage, LoginPage } from 'components'
-import { GoogleTagManager } from 'containers'
+import { GoogleTagManager, LightsContainer } from 'containers'
 
 import { auth, storageKey, isAuthenticated } from '../services/firebase'
 
@@ -31,22 +32,6 @@ const MatchWhenAuthorized = ({component: Component, ...rest}) => (
 
 class App extends Component {
 
-  state = {
-    uid: null
-  }
-
-  componentDidMount() {
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        window.localStorage.setItem(storageKey, user.uid)
-        this.setState({uid: user.uid})
-      } else {
-        window.localStorage.removeItem(storageKey)
-        this.setState({uid: null})
-      }
-    })
-  }
-
   render() {
     return (
       <div>
@@ -54,7 +39,7 @@ class App extends Component {
         <ThemeProvider theme={theme}>
           <Switch>
             <MatchWhenAuthorized path="/" component={AdminPage} exact />
-            <MatchWhenAuthorized path="/lights" component={LightsPage} exact />
+            <MatchWhenAuthorized path="/lights" component={LightsContainer} exact />
             <Route path="/login" component={LoginPage} exact />
             <Route component={NotFoundPage} />
           </Switch>
@@ -62,7 +47,6 @@ class App extends Component {
       </div>
     )
   }
-
 }
 
 export default App

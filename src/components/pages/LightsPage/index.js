@@ -14,8 +14,6 @@ import {
   BridgeModal,
   Button } from 'components'
 
-import { AdminContainer } from 'containers'
-
 const PaneContainer = styled.section`
   display: flex;
   flex-direction: row;
@@ -46,32 +44,26 @@ class LightsPage extends Component {
 
   setActiveEntry = (path, index) => this.setState({ activeEntry: { path, index } });
 
-  renderPath = (path) => this.state.entries[path].map(
+  renderPath = (path) => this.props.bridges.hue[path].map(
     (entry, i) => <GroupEntry
                       onClick={() => this.setActiveEntry(path, i)}
                       key={`${path}.${i}`}>{ entry.name }</GroupEntry>)
 
   render() {
-    const {...state} = this.state
-    const activeEntry = state.entries && state.activeEntry
-      ? state.entries[state.activeEntry.path][state.activeEntry.index] : null
-
-    const modal = {
-      isOpen: !state.hasBridge,
-      onClose() {
-        console.log('closing modal')
-      }
-    }
+    const has = Object.prototype.hasOwnProperty
+    const { state, props } = this
+    const activeEntry = props.bridges && state.activeEntry
+      ? props.bridges.hue[state.activeEntry.path][state.activeEntry.index] : null
 
     return (
-      <AdminContainer title="Lights">
+      <AdminTemplate title="Lights">
         <PaneContainer>
           <LeftPane>
             <Group>
               <GroupHeading>Lights</GroupHeading>
-              { this.renderPath('lights') }
+              { props.bridges && has.call(props.bridges, 'hue') && this.renderPath('lights') }
               <GroupHeading>Groups</GroupHeading>
-              { this.renderPath('groups') }
+              { props.bridges && has.call(props.bridges, 'hue') && this.renderPath('groups') }
             </Group>
           </LeftPane>
           { activeEntry && state.hasBridge
@@ -85,7 +77,7 @@ class LightsPage extends Component {
             : <RightPane><Heading>No Entry Selected</Heading></RightPane>
           }
         </PaneContainer>
-      </AdminContainer>
+      </AdminTemplate>
     )
   }
 }

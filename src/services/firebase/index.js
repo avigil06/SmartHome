@@ -15,4 +15,7 @@ export const auth = firebaseApp.auth()
 
 export const storageKey = 'auth_storage_container'
 
-export const isAuthenticated = () => !!auth.currentUser
+export const isAuthenticated = () => {
+  console.log(Object.assign({}, auth))
+  return !!auth.currentUser || !!localStorage.getItem(storageKey)
+}
